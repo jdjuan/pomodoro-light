@@ -1,17 +1,41 @@
 .container {
-  height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  background: url(../../../assets/background.jpg) no-repeat center fixed;
-  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
-  background-size: cover; /* version standardisée */
-
-  .title {
-    color: white;
-    margin:0;
-    padding:50px 20px;
+  height: 100vh;
+  color: #45ceb6;
+  .timer {
+    text-align: center;
+    position: relative;
+    .time-left {
+      font-size: 6rem;
+      font-weight: bold;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+    }
   }
-
+  .form {
+    margin-top: 2rem;
+    text-align: center;
+    .minutes-field {
+      font-size: 1.5rem;
+      margin: 0;
+      margin-bottom: 0.3rem;
+    }
+    .minutes-set {
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      color: #45ceb6;
+      font-weight: bold;
+      font-size: 2rem;
+      border-bottom: 1px solid;
+      width: 4rem;
+    }
+  }
 }

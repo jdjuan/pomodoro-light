@@ -1,5 +1,31 @@
 <div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
+  <div class="timer">
+    <round-progress [current]="current"
+                    [max]="max"
+                    [color]="'#45ceb6'"
+                    [background]="'#510247'"
+                    [radius]="200"
+                    [stroke]="35"
+                    [rounded]="true"
+                    [responsive]="false"
+                    [duration]="1000"
+                    [animation]="'easeOutCubic'"
+                    [animationDelay]="0"></round-progress>
+    <p class="time-left">{{remainingTime }}</p>
+  </div>
+  <div class="form">
+    <p class="minutes-field">
+      Minutes:
+    </p>
+    <input type="number"
+           class="minutes-set"
+           [value]="minutesSet"
+           (keyup.enter)="setTimer($event.target)">
+  </div>
+</div>
+
+<div class="text"
+     *ngIf="!inProgress">
+  <audio src="assets/chime.mp3"
+         autoplay></audio>
 </div>
