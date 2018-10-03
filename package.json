@@ -17,7 +17,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "postinstall": "npm run postinstall:electron && npx electron-builder install-app-deps && ./node_modules/.bin/electron-rebuild.cmd -f -w serialport",
+    "postinstall": "npm run postinstall:electron && npx electron-builder install-app-deps && electron-rebuild -f -w serialport",
     "postinstall:web": "node postinstall-web",
     "postinstall:electron": "node postinstall",
     "ng": "ng",
