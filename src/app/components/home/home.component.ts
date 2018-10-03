@@ -1,8 +1,8 @@
+import * as SerialPort from 'serialport';
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { filter, tap } from 'rxjs/operators';
 import { interval, Observable } from 'rxjs';
-// import * as serialport from 'serialport';
 
 @Component({
   selector: 'app-home',
@@ -16,12 +16,9 @@ export class HomeComponent implements OnInit {
   minutesSet = 3;
   inProgress = true;
   interval$: Observable<number>;
+  portAccess: SerialPort;
 
-  constructor() {
-    // constructor(private electron: ElectronService) {
-    // const myPort = new serialport('COM4', { baudRate: 9600 });
-    // console.log(myPort);
-    // myPort.write('on');
+  constructor(private electron: ElectronService) {
     this.interval$ = interval(1000).pipe(
       filter(() => this.inProgress),
       tap(() => {
@@ -33,14 +30,38 @@ export class HomeComponent implements OnInit {
     this.interval$.subscribe();
   }
 
+  ngOnInit() {
+    this.electron.serialPort
+      .list()
+      .then((ports: any) => {
+        this.portAccess = new this.electron.serialPort(
+          ports[0]['comName'],
+          { baudRate: 9600 },
+        );
+        this.portAccess.write('on');
+      })
+      .catch((err: any) => {});
+  }
+
+  startTimer(input: HTMLInputElement) {
+    this.max = +input.value * 60;
+    this.minutesSet = +input.value;
+    input.value = null;
+    this.current = 0;
+    this.updateProgress();
+    this.portAccess.write('on');
+  }
   updateProgress() {
     this.inProgress = this.max > this.current;
+    if (!this.inProgress) {
+      this.portAccess.write('off');
+    }
   }
 
   updateRemainingTime() {
     const secondsLeft = this.max - Math.round(this.current);
     const minutes = Math.floor(secondsLeft / 60);
-    const seconds = secondsLeft % 60;
+    const seconds = Math.floor(secondsLeft % 60);
     if (!seconds) {
       this.remainingTime = `00`;
     } else {
@@ -50,24 +71,7 @@ export class HomeComponent implements OnInit {
       this.remainingTime = `${minutes}:${this.remainingTime}`;
     }
   }
-
-  setTimer(input: HTMLInputElement) {
-    this.max = +input.value * 60;
-    this.minutesSet = +input.value;
-    input.value = null;
-    this.current = 0;
-    this.updateProgress();
-  }
   restart() {
     this.current = 0;
-  }
-
-  ngOnInit() {
-    // this.electron.serialPort
-    //   .list()
-    //   .then((ports: any) => {
-    //     console.log(ports);
-    //   })
-    //   .catch((err: any) => {});
   }
 }
